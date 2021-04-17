@@ -1,5 +1,6 @@
 /// Default letters to fill in the empty spaces
-const String WSLetters = 'abcdefghijklmnoprstuvwy';
+const String WSLettersEN = 'abcdefghijklmnoprstuvwy';
+const String WSLettersAr = "ءؤىآيوهنملكقفغعظطضصشسزرذدخحجثتبا";
 
 /// All the orientations available to build the puzzle
 enum WSOrientation {

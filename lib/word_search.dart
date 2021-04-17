@@ -33,12 +33,12 @@ class WordSearch {
   /// Returns either a valid puzzle with all of the words or null if a valid
   /// puzzle was not found.
   List<List<String>> _fillPuzzle(
-    /// The list of words to fit into the puzzle
-    List<String> words,
 
-    /// The options to use when filling the puzzle
-    WSSettings options,
-  ) {
+      /// The list of words to fit into the puzzle
+      List<String> words,
+
+      /// The options to use when filling the puzzle
+      WSSettings options,) {
     final List<List<String>> puzzle = [];
     // initialize the puzzle with blanks
     for (var i = 0; i < options.height; i++) {
@@ -65,18 +65,18 @@ class WordSearch {
   ///
   /// Returns `true` if the word was successfully placed, `false` otherwise.
   bool _placeWordInPuzzle(
-    /// The current state of the puzzle
-    List<List<String>> puzzle,
 
-    /// The options to use when filling the puzzle
-    WSSettings options,
+      /// The current state of the puzzle
+      List<List<String>> puzzle,
 
-    /// The word to fit into the puzzle
-    String word,
-  ) {
+      /// The options to use when filling the puzzle
+      WSSettings options,
+
+      /// The word to fit into the puzzle
+      String word,) {
     // find all of the best locations where this word would fit
     final List<WSLocation> locations =
-        _findBestLocations(puzzle, options, word);
+    _findBestLocations(puzzle, options, word);
 
     if (locations.isEmpty) {
       return false;
@@ -102,15 +102,15 @@ class WordSearch {
   /// indicating the start of the word, the orientation of the word, and the
   /// number of letters that overlapped with existing letter.
   List<WSLocation> _findBestLocations(
-    /// The current state of the puzzle
-    List<List<String>> puzzle,
 
-    /// The options to use when filling the puzzle
-    WSSettings options,
+      /// The current state of the puzzle
+      List<List<String>> puzzle,
 
-    /// The word to fit into the puzzle
-    String word,
-  ) {
+      /// The options to use when filling the puzzle
+      WSSettings options,
+
+      /// The word to fit into the puzzle
+      String word,) {
     List<WSLocation> locations = [];
     int height = options.height;
     int width = options.width;
@@ -177,21 +177,21 @@ class WordSearch {
   /// Returns the number of letters overlapped with existing words if the word
   /// fits in the specified position, -1 if the word does not fit.
   int _calcOverlap(
-    /// The word to fit into the puzzle
-    String word,
 
-    /// The current state of the puzzle
-    List<List<String>> puzzle,
+      /// The word to fit into the puzzle
+      String word,
 
-    /// The x position to check
-    int x,
+      /// The current state of the puzzle
+      List<List<String>> puzzle,
 
-    /// The y position to check
-    int y,
+      /// The x position to check
+      int x,
 
-    /// Function that returns the next square
-    WSOrientationFn fnGetSquare,
-  ) {
+      /// The y position to check
+      int y,
+
+      /// Function that returns the next square
+      WSOrientationFn fnGetSquare,) {
     int overlap = 0;
 
     // traverse the squares to determine if the word fits
@@ -226,12 +226,12 @@ class WordSearch {
   ///
   /// Returns the pruned set of locations.
   List<WSLocation> _pruneLocations(
-    /// The set of locations to prune
-    List<WSLocation> locations,
 
-    /// The required level of overlap
-    int overlap,
-  ) {
+      /// The set of locations to prune
+      List<WSLocation> locations,
+
+      /// The required level of overlap
+      int overlap,) {
     List<WSLocation> pruned = [];
     for (var i = 0; i < locations.length; i++) {
       if (locations[i].overlap >= overlap) {
@@ -243,21 +243,21 @@ class WordSearch {
 
   /// Places a word in the puzzle given a starting position and orientation.
   void _placeWord(
-    /// The current state of the puzzle
-    List<List<String>> puzzle,
 
-    ///  The word to fit into the puzzle
-    String word,
+      /// The current state of the puzzle
+      List<List<String>> puzzle,
 
-    /// The x position to check
-    int x,
+      ///  The word to fit into the puzzle
+      String word,
 
-    /// The y position to check
-    int y,
+      /// The x position to check
+      int x,
 
-    /// Function that returns the next square
-    WSOrientationFn fnGetSquare,
-  ) {
+      /// The y position to check
+      int y,
+
+      /// Function that returns the next square
+      WSOrientationFn fnGetSquare,) {
     for (var i = 0; i < word.length; i++) {
       final WSPosition next = fnGetSquare(x, y, i);
       try {
@@ -271,12 +271,12 @@ class WordSearch {
 
   /// Fills in any empty spaces in the puzzle with random letters.
   int _fillBlanks(
-    /// The current state of the puzzle
-    List<List<String>> puzzle,
 
-    /// Function to add extra letters to fill blanks
-    Function extraLetterGenerator,
-  ) {
+      /// The current state of the puzzle
+      List<List<String>> puzzle,
+
+      /// Function to add extra letters to fill blanks
+      Function extraLetterGenerator,) {
     int extraLettersCount = 0;
     for (var i = 0, height = puzzle.length; i < height; i++) {
       List<String> row = puzzle[i];
@@ -302,12 +302,15 @@ class WordSearch {
   /// ```
   ///
   WSNewPuzzle newPuzzle(
-    /// The words to be placed in the puzzle
-    List<String> words,
 
-    /// The puzzle setting object
-    WSSettings settings,
-  ) {
+      /// The words to be placed in the puzzle
+      List<String> words,
+
+      /// The puzzle setting object
+      WSSettings settings, {
+        /// The letters lang
+        Language lettersLanguage = Language.en,
+      }) {
     // New instance of the output data
     WSNewPuzzle output = WSNewPuzzle();
     if (words.isEmpty) {
@@ -349,7 +352,8 @@ class WordSearch {
         // No more grid growths allowed
         if (gridGrowths > options.maxGridGrowth) {
           output.errors.add(
-            'No valid ${options.width}x${options.height} grid found and not allowed to grow more',
+            'No valid ${options.width}x${options
+                .height} grid found and not allowed to grow more',
           );
           return output;
         }
@@ -382,7 +386,14 @@ class WordSearch {
       } else {
         // Use the default random letters
         extraLetterGenerator = () {
-          return WSLetters[Random().nextInt(WSLetters.length)];
+          if (lettersLanguage == Language.ar)
+            return WSLettersAr[Random().nextInt(WSLettersAr.length)];
+          else if (lettersLanguage == Language.en)
+            return WSLettersEN[Random().nextInt(WSLettersEN.length)];
+          else if (lettersLanguage == Language.both) {
+            String bothLangChar = WSLettersAr + WSLettersEN;
+            return bothLangChar[Random().nextInt(bothLangChar.length)];
+          }
         };
       }
       // Fill all the blanks in the puzzle
@@ -422,13 +433,11 @@ class WordSearch {
   /// // Outputs found and not found words
   /// ```
   ///
-  WSSolved solvePuzzle(
-    // The current state of the puzzle
-    List<List<String>> puzzle,
+  WSSolved solvePuzzle(// The current state of the puzzle
+      List<List<String>> puzzle,
 
-    /// The words to be searched in the puzzle
-    List<String> words,
-  ) {
+      /// The words to be searched in the puzzle
+      List<String> words,) {
     WSSettings options = WSSettings(
       height: puzzle.length,
       width: puzzle[0].length,
@@ -450,3 +459,5 @@ class WordSearch {
     return output;
   }
 }
+
+enum Language { en, ar, both }
