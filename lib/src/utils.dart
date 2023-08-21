@@ -35,13 +35,13 @@ class WSSettings {
   ///
   /// **Note:** This will automatically increment if
   /// the words cannot be placed properly in the puzzle
-  int height;
+  int? height;
 
   /// The recommended width of the puzzle
   ///
   /// **Note:** This will automatically increment if
   /// the words cannot be placed properly in the puzzle
-  int width;
+  int? width;
 
   /// The allowed orientations for the words placed in the puzzle
   final List<WSOrientation> orientations;
@@ -93,19 +93,19 @@ class WSSettings {
 /// Word location interface
 class WSLocation implements WSPosition {
   /// The column position where the word starts
-  final int x;
+  final int? x;
 
   /// The row position where the word starts
-  final int y;
+  final int? y;
 
   /// The orientation the word placed in the puzzle
-  final WSOrientation orientation;
+  final WSOrientation? orientation;
 
   /// The numbed of overlaps the word has
-  final int overlap;
+  final int? overlap;
 
   /// The word used
-  String word;
+  String? word;
 
   WSLocation({
     this.x,
@@ -119,10 +119,10 @@ class WSLocation implements WSPosition {
 // Word position interface
 class WSPosition {
   /// The column position where the word starts
-  final int x;
+  final int? x;
 
   /// The row position where the word starts
-  final int y;
+  final int? y;
 
   WSPosition({
     this.x = 0,
@@ -133,7 +133,7 @@ class WSPosition {
 /// New puzzle interface
 class WSNewPuzzle {
   /// Two dimentional list containing the puzzle
-  List<List<String>> puzzle;
+  List<List<String?>> puzzle;
 
   /// List of word not placed in the puzzle
   List<String> wordsNotPlaced;
@@ -149,10 +149,10 @@ class WSNewPuzzle {
   List<String> errors;
 
   WSNewPuzzle({
-    this.puzzle,
-    List<String> wordsNotPlaced,
-    List<String> warnings,
-    List<String> errors,
+    required this.puzzle,
+    List<String>? wordsNotPlaced,
+    List<String>? warnings,
+    List<String>? errors,
   })  : wordsNotPlaced = wordsNotPlaced ?? [],
         warnings = warnings ?? [],
         errors = errors ?? [];
@@ -173,9 +173,9 @@ class WSNewPuzzle {
   String toString() {
     String puzzleString = '';
     for (var i = 0, height = puzzle.length; i < height; i++) {
-      final List<String> row = puzzle[i];
+      final List<String?> row = puzzle[i];
       for (var j = 0, width = row.length; j < width; j++) {
-        puzzleString += (row[j] == '' ? ' ' : row[j]) + ' ';
+        puzzleString += (row[j] == '' ? ' ' : row[j])! + ' ';
       }
       puzzleString += '\n';
     }
@@ -192,8 +192,8 @@ class WSSolved {
   List<String> notFound;
 
   WSSolved({
-    List<WSLocation> found,
-    List<String> notFound,
+    List<WSLocation>? found,
+    List<String>? notFound,
   })  : found = found ?? [],
         notFound = notFound ?? [];
 }
